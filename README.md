@@ -75,18 +75,18 @@ A complete restaurant management system built with **Next.js 16**, **Supabase**,
 ## UserSide Flow 
 
 Homepage (splash → hero → features → reviews)
-  │
-  ├── Menu → Browse categories → Product detail → Add to cart
-  │
-  ├── Cart → Apply coupon → Proceed to checkout
-  │
-  ├── Checkout → Select order type → Payment method → Place order
-  │
-  ├── Orders → Live status tracking → Invoice print
-  │
-  ├── Reserve → Pick date & time slot → Confirm reservation
-  │
-  └── Auth (Login / Register with OTP or Google)
+-  │
+-  ├── Menu → Browse categories → Product detail → Add to cart
+-  │
+-  ├── Cart → Apply coupon → Proceed to checkout
+-  │
+-  ├── Checkout → Select order type → Payment method → Place order
+-  │
+-  ├── Orders → Live status tracking → Invoice print
+-  │
+-  ├── Reserve → Pick date & time slot → Confirm reservation
+-  │
+-  └── Auth (Login / Register with OTP or Google)
 
 
 ## 🚀 Setup Instructions
