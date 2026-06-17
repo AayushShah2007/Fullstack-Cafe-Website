@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   description:
     "Best fast food, beverages, sandwiches, burgers, pizza, shakes, pasta & juices in Borivali West, Mumbai",
   icons: { icon: "/favicon.png" },
-  verification: { google: "google259fdfb750ef582f.html" },
+
   openGraph: {
     title: "Eat O'Clock - Premium Cafe & Fast Food",
     description:
