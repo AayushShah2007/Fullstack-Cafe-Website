@@ -36,6 +36,23 @@ yarn-error.log*
 # vercel
 .vercel
 
+# next.js build artifacts in public
+/public/BUILD_ID
+/public/app-path-routes-manifest.json
+/public/build-manifest.json
+/public/export-marker.json
+/public/fallback-build-manifest.json
+/public/images-manifest.json
+/public/next-minimal-server.js.nft.json
+/public/next-server.js.nft.json
+/public/package.json
+/public/prerender-manifest.json
+/public/required-server-files.*
+/public/routes-manifest.json
+/public/trace
+/public/trace-build
+/public/turbopack
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

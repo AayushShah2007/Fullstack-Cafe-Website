@@ -1,0 +1,16 @@
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop' WHERE name = 'Classic Veg Burger' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=600&h=400&fit=crop' WHERE name = 'Cheese Burger' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&h=400&fit=crop' WHERE name = 'Margherita Pizza' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop' WHERE name = 'Farmhouse Pizza' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&h=400&fit=crop' WHERE name = 'Chocolate Shake' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&h=400&fit=crop' WHERE name = 'Strawberry Shake' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop' WHERE name = 'Oreo Shake' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&h=400&fit=crop' WHERE name = 'White Sauce Pasta' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=600&h=400&fit=crop' WHERE name = 'Red Sauce Pasta' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&h=400&fit=crop' WHERE name = 'Grilled Sandwich' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1550507992-eb63ffee0847?w=600&h=400&fit=crop' WHERE name = 'Club Sandwich' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&h=400&fit=crop' WHERE name = 'Cold Coffee' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&h=400&fit=crop' WHERE name = 'Fresh Lime Soda' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&h=400&fit=crop' WHERE name = 'Mango Juice' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&h=400&fit=crop' WHERE name = 'French Fries' AND image_url IS NULL;
+UPDATE menu_items SET image_url = 'https://images.unsplash.com/photo-1562967914-608f82629710?w=600&h=400&fit=crop' WHERE name = 'Veg Nuggets (6 pcs)' AND image_url IS NULL;

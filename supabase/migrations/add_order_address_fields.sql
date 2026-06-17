@@ -1,0 +1,7 @@
+-- Add individual address columns to orders table
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS address_line1 TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS address_line2 TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS district TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS state TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS pincode TEXT;

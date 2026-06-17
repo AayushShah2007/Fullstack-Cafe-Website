@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Color Palettes - Eat O'Clock</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0f0f0f; color: #fff; padding: 40px 20px; }
+h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; text-align: center; margin-bottom: 8px; }
+.subtitle { text-align: center; color: #888; margin-bottom: 48px; font-size: 1.05rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; max-width: 1200px; margin: 0 auto; }
+.card { border-radius: 20px; overflow: hidden; background: #1a1a1a; border: 1px solid #2a2a2a; transition: transform 0.2s, box-shadow 0.2s; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.5); }
+.swatch-row { display: flex; height: 80px; }
+.swatch-row div { flex: 1; }
+.preview-area { padding: 20px; }
+.preview-area h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+.preview-area .desc { font-size: 0.85rem; color: #999; margin-bottom: 16px; }
+.sample-card { border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.sample-card .title { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+.sample-card .meta { font-size: 0.8rem; opacity: 0.7; }
+.sample-btn { display: inline-block; padding: 8px 20px; border-radius: 8px; font-weight: 500; font-size: 0.85rem; border: none; cursor: default; margin-right: 8px; margin-bottom: 6px; }
+.sample-btn-outline { display: inline-block; padding: 7px 19px; border-radius: 8px; font-weight: 500; font-size: 0.85rem; background: transparent; cursor: default; margin-right: 8px; }
+.tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; margin-right: 4px; margin-bottom: 4px; }
+ul.colors { list-style: none; padding: 16px 20px; font-size: 0.8rem; }
+ul.colors li { display: flex; justify-content: space-between; padding: 4px 0; color: #aaa; }
+ul.colors li span:first-child { color: #fff; }
+.num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 0.75rem; font-weight: 600; margin-right: 10px; flex-shrink: 0; }
+.card-header { display: flex; align-items: center; padding: 16px 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>Choose Your Palette</h1>
+<p class="subtitle">Six distinct color directions for Eat O'Clock Cafe — click the number to pick your favorite</p>
+
+<div class="grid" id="paletteGrid"></div>
+
+<script>
+const palettes = [
+  {
+    name: "Midnight Chocolate",
+    desc: "Rich dark browns with warm cream and gold — sophisticated, premium, timeless",
+    num: "01",
+    numBg: "#C8A96E",
+    swatches: ["#1C1410", "#2D1F18", "#4A3228", "#C8A96E", "#F5F0E8", "#EDE6DC"],
+    bg: "#1C1410",
+    cardBg: "#2D1F18",
+    text: "#F5F0E8",
+    muted: "#B8A89A",
+    accent: "#C8A96E",
+    btn: "#C8A96E",
+    btnText: "#1C1410",
+    secondary: "#4A3228",
+    tagBg: "#4A3228",
+    tagText: "#EDE6DC"
+  },
+  {
+    name: "Matcha Zen",
+    desc: "Earthy matcha greens with cream and warm wood — fresh, organic, calming",
+    num: "02",
+    numBg: "#7A9E6B",
+    swatches: ["#1A1F18", "#2D3A28", "#7A9E6B", "#F5F2E8", "#E8E0CC", "#BD9A6A"],
+    bg: "#1A1F18",
+    cardBg: "#2D3A28",
+    text: "#F5F2E8",
+    muted: "#A8B89A",
+    accent: "#7A9E6B",
+    btn: "#7A9E6B",
+    btnText: "#1A1F18",
+    secondary: "#BD9A6A",
+    tagBg: "#3D4F38",
+    tagText: "#E8E0CC"
+  },
+  {
+    name: "Berry Bliss",
+    desc: "Deep magenta-berry with blush pink and soft cream — vibrant, modern, youthful",
+    num: "03",
+    numBg: "#C25A7C",
+    swatches: ["#1A1218", "#3A1F2E", "#C25A7C", "#F8E8EE", "#F5F0F0", "#E8C4D0"],
+    bg: "#1A1218",
+    cardBg: "#3A1F2E",
+    text: "#F8E8EE",
+    muted: "#C4A0B0",
+    accent: "#C25A7C",
+    btn: "#C25A7C",
+    btnText: "#1A1218",
+    secondary: "#6B3A5E",
+    tagBg: "#4A2A3E",
+    tagText: "#E8C4D0"
+  },
+  {
+    name: "Ocean Breeze",
+    desc: "Deep teal and navy with sand and crisp white — coastal, fresh, clean",
+    num: "04",
+    numBg: "#4B9B9B",
+    swatches: ["#0F1A1E", "#1A2F36", "#4B9B9B", "#E8E0CC", "#F5F3EF", "#C4A882"],
+    bg: "#0F1A1E",
+    cardBg: "#1A2F36",
+    text: "#E8F0EF",
+    muted: "#8AACAC",
+    accent: "#4B9B9B",
+    btn: "#4B9B9B",
+    btnText: "#0F1A1E",
+    secondary: "#C4A882",
+    tagBg: "#254048",
+    tagText: "#C4DEC8"
+  },
+  {
+    name: "Warm Spice",
+    desc: "Cinnamon, terracotta, and warm cream — cozy, rustic, inviting",
+    num: "05",
+    numBg: "#C97B4A",
+    swatches: ["#1C1410", "#3E2A1E", "#C97B4A", "#F5EDE4", "#EDE0D0", "#A8643A"],
+    bg: "#1C1410",
+    cardBg: "#3E2A1E",
+    text: "#F5EDE4",
+    muted: "#C4A88A",
+    accent: "#C97B4A",
+    btn: "#C97B4A",
+    btnText: "#1C1410",
+    secondary: "#A8643A",
+    tagBg: "#52382A",
+    tagText: "#EDE0D0"
+  },
+  {
+    name: "Charcoal & Gold",
+    desc: "Deep charcoal with striking gold accents — ultra modern, luxury, bold",
+    num: "06",
+    numBg: "#D4AF37",
+    swatches: ["#0F0F0F", "#1E1E1E", "#333333", "#D4AF37", "#F5F5F5", "#B8960F"],
+    bg: "#0F0F0F",
+    cardBg: "#1E1E1E",
+    text: "#F5F5F5",
+    muted: "#888888",
+    accent: "#D4AF37",
+    btn: "#D4AF37",
+    btnText: "#0F0F0F",
+    secondary: "#333333",
+    tagBg: "#2A2A2A",
+    tagText: "#D4AF37"
+  }
+];
+
+const grid = document.getElementById('paletteGrid');
+
+palettes.forEach((p, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-header">
+      <div class="num" style="background:${p.numBg};color:${p.bg}">${p.num}</div>
+    </div>
+    <div class="swatch-row">
+      ${p.swatches.map(s => `<div style="background:${s}"></div>`).join('')}
+    </div>
+    <div class="preview-area" style="background:${p.bg}">
+      <h2 style="color:${p.text}">${p.name}</h2>
+      <p class="desc">${p.desc}</p>
+      <div class="sample-card" style="background:${p.cardBg}">
+        <div class="title" style="color:${p.text}">Signature Latte</div>
+        <div class="meta" style="color:${p.muted}">₹250 · 4.8 ★</div>
+      </div>
+      <div>
+        <button class="sample-btn" style="background:${p.btn};color:${p.btnText}">Add to Cart</button>
+        <button class="sample-btn-outline" style="color:${p.accent};border:1px solid ${p.accent}">View Menu</button>
+      </div>
+      <div style="margin-top:12px">
+        <span class="tag" style="background:${p.tagBg};color:${p.tagText}">Available</span>
+        <span class="tag" style="background:${p.tagBg};color:${p.tagText}">Popular</span>
+      </div>
+    </div>
+    <ul class="colors">
+      <li><span>Background</span><span>${p.swatches[0]}</span></li>
+      <li><span>Surface</span><span>${p.swatches[1]}</span></li>
+      <li><span>Primary</span><span>${p.swatches[2]}</span></li>
+      <li><span>Accent</span><span>${p.swatches[3]}</span></li>
+      <li><span>Light</span><span>${p.swatches[4]}</span></li>
+      <li><span>Secondary</span><span>${p.swatches[5]}</span></li>
+    </ul>
+  `;
+  card.style.cursor = 'pointer';
+  card.onclick = () => {
+    document.querySelectorAll('.card').forEach(c => c.style.borderColor = '#2a2a2a');
+    card.style.borderColor = p.numBg;
+    card.style.borderWidth = '2px';
+    document.getElementById('selected').textContent = `Selected: ${p.name}`;
+    document.getElementById('selected').style.color = p.numBg;
+  };
+  grid.appendChild(card);
+});
+
+const selection = document.createElement('p');
+selection.id = 'selected';
+selection.style.cssText = 'text-align:center;margin-top:32px;font-size:1.1rem;font-weight:600;min-height:30px;color:#555';
+selection.textContent = 'Click a palette card to select it';
+document.body.appendChild(selection);
+</script>
+</body>
+</html>
