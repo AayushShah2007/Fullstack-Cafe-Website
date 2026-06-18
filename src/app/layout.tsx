@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google"
 import Script from "next/script"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css"
 import Providers from "@/components/Providers"
 import Navbar from "@/components/layout/Navbar"
@@ -65,6 +66,7 @@ export default function RootLayout({
           gtag('js', new Date());
           gtag('config', 'G-BBVKPF3519');`}
         </Script>
+        <SpeedInsights />
         <Providers>
           <Navbar />
           <main className="flex-1">{children}</main>
