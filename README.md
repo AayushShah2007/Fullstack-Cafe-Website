@@ -5,11 +5,9 @@
 
 # 🍽️ Eat O'Clock — Full-Stack Cafe Management System
 
-A complete restaurant management solution built with **Next.js 16**, **Supabase**, and **TypeScript**. Customers can browse a categorized menu with **3D interactive elements**, place orders (Takeaway / Dine-in / Delivery), pay via **UPI / Card / Cash**, track orders in real-time, reserve tables, and leave reviews. The **admin panel** provides live order management with **WebSocket notifications**, financial analytics, and full CRUD operations.
+A complete restaurant management solution built with **Next.js 16**, **Supabase**, and **TypeScript**. Customers can browse a categorized menu with **3D interactive elements**, place orders (Takeaway / Dine-in / Delivery), pay via **UPI / Card / Cash**, track orders in real-time, reserve tables, and leave reviews.
 
-📍 **Shop 2A, Mani Bhavan, Opp. Ganjaawala Garden, Borivali West, Mumbai**  
-🕐 **4:30 PM – 11:00 PM (Daily)**  
-💰 **~₹350 for two**
+The **admin panel** provides live order management with **WebSocket notifications**, financial analytics, User Management, Order History, Reservation Management,and full CRUD operations,.
 
 ---
 
@@ -265,14 +263,4 @@ Auto-deploy is enabled — every push to `master` triggers a new deployment.
 - `.env.local` is gitignored — never commit secrets
 - Admin routes protected by role-based access control
 
----
 
-## 📄 License
-
-MIT
-
----
-
-<div align="center">
-  <sub>Built with ❤️ for Eat O'Clock Cafe, Borivali West, Mumbai</sub>
-</div>
