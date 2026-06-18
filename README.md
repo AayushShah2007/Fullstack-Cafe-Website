@@ -1,6 +1,6 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="/eat-o-clock-logo.png">
-  <img alt="Eat O'Clock Logo" src="/eat-o-clock-logo.png" width="400">
+  <img alt="Eat O'Clock Logo" src="/eat-o clock.png" width="400">
 </picture>
 
 # 🍽️ Eat O'Clock — Full-Stack Cafe Management System
