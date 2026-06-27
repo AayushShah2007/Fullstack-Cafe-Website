@@ -185,24 +185,30 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (isLoading) return
-    if (!user) {
+    if (!user?.id) {
       router.push("/auth/login")
       return
     }
 
     let cancelled = false
+    const uid = user.id
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${user.id}`)
-        if (res.ok && !cancelled) {
-          const data = await res.json()
-          setOrders(data as Order[])
+        const res = await fetch(`/api/orders/list?userId=${uid}`)
+        if (!cancelled) {
+          if (res.ok) {
+            const data = (await res.json()) as Order[]
+            setOrders(data.filter((o) => o.user_id === uid))
+          }
+          setLoadingOrders(false)
+          setInitialFetchDone(true)
         }
-      } catch {}
-      if (!cancelled) {
-        setLoadingOrders(false)
-        setInitialFetchDone(true)
+      } catch {
+        if (!cancelled) {
+          setLoadingOrders(false)
+          setInitialFetchDone(true)
+        }
       }
     }
 
@@ -210,10 +216,10 @@ export default function OrdersPage() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${user.id}`)
+        const res = await fetch(`/api/orders/list?userId=${uid}`)
         if (res.ok && !cancelled) {
-          const data = await res.json()
-          setOrders(data as Order[])
+          const data = (await res.json()) as Order[]
+          setOrders(data.filter((o) => o.user_id === uid))
         }
       } catch {}
     }, 5000)
@@ -222,7 +228,7 @@ export default function OrdersPage() {
       cancelled = true
       clearInterval(pollInterval)
     }
-  }, [user, isLoading, router])
+  }, [user?.id, isLoading, router])
 
   const handlePrintInvoice = (order: Order) => {
     setPrintingOrderId(order.id)
