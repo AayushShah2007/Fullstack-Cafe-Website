@@ -7,18 +7,21 @@ export async function GET(req: NextRequest) {
     const range = searchParams.get("range") || "today"
 
     const now = new Date()
+    const offset = 5.5 * 60 * 60 * 1000
+    const nowIST = new Date(now.getTime() + offset)
     let startDate: Date
     if (range === "month") {
-      startDate = new Date(now)
+      startDate = new Date(nowIST)
       startDate.setDate(startDate.getDate() - 30)
     } else if (range === "week") {
-      startDate = new Date(now)
+      startDate = new Date(nowIST)
       startDate.setDate(startDate.getDate() - 7)
     } else {
-      startDate = new Date(now)
+      startDate = new Date(nowIST)
       startDate.setHours(0, 0, 0, 0)
     }
-    const startISO = startDate.toISOString()
+    const startUTC = new Date(startDate.getTime() - offset)
+    const startISO = startUTC.toISOString()
 
     const { count: totalOrders } = await supabaseAdmin
       .from("orders")
@@ -86,8 +89,10 @@ export async function GET(req: NextRequest) {
       const label = h === 0 ? "12 AM" : h < 12 ? `${h} AM` : h === 12 ? "12 PM" : `${h - 12} PM`
       hourMap[label] = 0
     }
+    const toIST = (utcStr: string) => new Date(new Date(utcStr).getTime() + offset)
+
     paidOrders.forEach((o) => {
-      const d = new Date(o.created_at)
+      const d = toIST(o.created_at)
       const h = d.getHours()
       const label = h === 0 ? "12 AM" : h < 12 ? `${h} AM` : h === 12 ? "12 PM" : `${h - 12} PM`
       if (hourMap[label] !== undefined) hourMap[label]++
@@ -102,7 +107,7 @@ export async function GET(req: NextRequest) {
         chartData.push({ label, count: 0, revenue: 0 })
       }
       paidOrders.forEach((o) => {
-        const h = new Date(o.created_at).getHours()
+        const h = toIST(o.created_at).getHours()
         if (chartData[h]) {
           chartData[h].count++
           chartData[h].revenue += Number(o.total_amount)
@@ -118,7 +123,7 @@ export async function GET(req: NextRequest) {
         dayLabels[key] = { count: 0, revenue: 0 }
       }
       paidOrders.forEach((o) => {
-        const key = new Date(o.created_at).toLocaleDateString("en-IN", {
+        const key = toIST(o.created_at).toLocaleDateString("en-IN", {
           weekday: "short", day: "numeric",
         })
         if (dayLabels[key]) {
