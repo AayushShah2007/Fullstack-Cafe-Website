@@ -169,6 +169,7 @@ export default function OrdersPage() {
   const { user, isLoading } = useAuthStore()
   const [orders, setOrders] = useState<Order[]>([])
   const [loadingOrders, setLoadingOrders] = useState(true)
+  const [initialFetchDone, setInitialFetchDone] = useState(false)
   const [printingOrderId, setPrintingOrderId] = useState<string | null>(null)
   const [storeSettings, setStoreSettings] = useState<any>({})
   const router = useRouter()
@@ -189,34 +190,36 @@ export default function OrdersPage() {
       return
     }
 
+    let cancelled = false
+
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${user.id}&limit=1`)
-        if (res.ok) {
+        const res = await fetch(`/api/orders/list?userId=${user.id}`)
+        if (res.ok && !cancelled) {
           const data = await res.json()
           setOrders(data as Order[])
         }
-      } catch {
-        // silent
+      } catch {}
+      if (!cancelled) {
+        setLoadingOrders(false)
+        setInitialFetchDone(true)
       }
-      setLoadingOrders(false)
     }
 
     fetchOrders()
 
     const pollInterval = setInterval(async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${user.id}&limit=1`)
-        if (res.ok) {
+        const res = await fetch(`/api/orders/list?userId=${user.id}`)
+        if (res.ok && !cancelled) {
           const data = await res.json()
           setOrders(data as Order[])
         }
-      } catch {
-        // silent
-      }
+      } catch {}
     }, 5000)
 
     return () => {
+      cancelled = true
       clearInterval(pollInterval)
     }
   }, [user, isLoading, router])
@@ -231,7 +234,7 @@ export default function OrdersPage() {
     }, 1000)
   }
 
-  if (isLoading || loadingOrders) {
+  if (isLoading || loadingOrders || !initialFetchDone) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-amber-600 border-t-transparent rounded-full animate-spin" />
