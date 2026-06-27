@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { supabaseAdmin } from "@/lib/supabase-admin"
 
+const OFFSET = 5.5 * 60 * 60 * 1000
+const toIST = (utcStr: string) => new Date(new Date(utcStr).getTime() + OFFSET)
+
 function getStartDate(range: string, offset = 0): Date {
-  const d = new Date()
+  const nowIST = new Date(Date.now() + OFFSET)
+  const d = new Date(nowIST)
   d.setDate(d.getDate() - offset)
   switch (range) {
     case "today": d.setHours(0, 0, 0, 0); break
@@ -12,7 +16,7 @@ function getStartDate(range: string, offset = 0): Date {
     case "year": d.setFullYear(d.getFullYear() - 1 * (offset + 1) + (offset === 0 ? 0 : 1)); break
     default: d.setDate(d.getDate() - 7)
   }
-  return d
+  return new Date(d.getTime() - OFFSET)
 }
 
 export async function GET(req: NextRequest) {
@@ -61,7 +65,7 @@ export async function GET(req: NextRequest) {
       const hourMap: Record<string, { revenue: number; orders: number }> = {}
       hourlySlots.forEach((slot) => { hourMap[slot] = { revenue: 0, orders: 0 } })
       paidOrders.forEach((o: any) => {
-        const h = new Date(o.created_at).getHours()
+        const h = toIST(o.created_at).getHours()
         const slot = hourlySlots[Math.floor(h / 3)] || "9PM-12AM"
         hourMap[slot].revenue += Number(o.total_amount)
         hourMap[slot].orders++
@@ -71,12 +75,12 @@ export async function GET(req: NextRequest) {
       const dayCount = range === "week" ? 7 : range === "month" ? 30 : range === "quarter" ? 90 : 365
       const dailyMap: Record<string, { revenue: number; orders: number }> = {}
       for (let i = dayCount - 1; i >= 0; i--) {
-        const date = new Date()
+        const date = new Date(Date.now() + OFFSET)
         date.setDate(date.getDate() - i)
         dailyMap[date.toLocaleDateString("en-IN", { day: "2-digit", month: "short" })] = { revenue: 0, orders: 0 }
       }
       paidOrders.forEach((o: any) => {
-        const key = new Date(o.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
+        const key = toIST(o.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })
         if (dailyMap[key]) { dailyMap[key].revenue += Number(o.total_amount); dailyMap[key].orders++ }
       })
       revenueData = Object.entries(dailyMap).map(([label, data]) => ({ label, ...data }))
@@ -133,22 +137,20 @@ export async function GET(req: NextRequest) {
     let weekOverWeek: { current: { label: string; revenue: number }[]; previous: { label: string; revenue: number }[] } | null = null
     if (range === "week" || range === "today") {
       const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      const today = new Date()
+      const nowIST = new Date(Date.now() + OFFSET)
       const current: { label: string; revenue: number }[] = []
       const previous: { label: string; revenue: number }[] = []
       for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i)
+        const d = new Date(nowIST); d.setDate(d.getDate() - i)
         const label = dayNames[d.getDay()]
         const cStart = new Date(d); cStart.setHours(0, 0, 0, 0)
         const cEnd = new Date(d); cEnd.setHours(23, 59, 59, 999)
-        const pStart = new Date(cStart); pStart.setDate(pStart.getDate() - 7)
-        const pEnd = new Date(cEnd); pEnd.setDate(pEnd.getDate() - 7)
 
         const cRev = paidOrders
-          .filter((o: any) => { const t = new Date(o.created_at).getTime(); return t >= cStart.getTime() && t <= cEnd.getTime() })
+          .filter((o: any) => { const t = toIST(o.created_at).getTime(); return t >= cStart.getTime() && t <= cEnd.getTime() })
           .reduce((s: number, o: any) => s + Number(o.total_amount), 0)
         const pRev = prevPaid
-          .filter((o: any) => { const t = new Date(o.created_at).getTime(); return t >= pStart.getTime() && t <= pEnd.getTime() })
+          .filter((o: any) => { const t = toIST(o.created_at).getTime(); return t >= cStart.getTime() - 7 * 86400000 && t <= cEnd.getTime() - 7 * 86400000 })
           .reduce((s: number, o: any) => s + Number(o.total_amount), 0)
         current.push({ label, revenue: cRev })
         previous.push({ label, revenue: pRev })
@@ -158,16 +160,18 @@ export async function GET(req: NextRequest) {
 
     // Hourly heatmap (last 7 days)
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    const nowIST = new Date(Date.now() + OFFSET)
     const hourlyHeatmap: { day: string; hour: number; orders: number }[] = []
     for (let d = 6; d >= 0; d--) {
+      const dayDate = new Date(nowIST); dayDate.setDate(dayDate.getDate() - d)
       for (let h = 0; h < 24; h++) {
-        hourlyHeatmap.push({ day: dayNames[new Date(Date.now() - d * 86400000).getDay()], hour: h, orders: 0 })
+        hourlyHeatmap.push({ day: dayNames[dayDate.getDay()], hour: h, orders: 0 })
       }
     }
     paidOrders.forEach((o: any) => {
-      const ot = new Date(o.created_at)
-      const now = Date.now()
-      const dayDiff = Math.floor((now - ot.getTime()) / 86400000)
+      const ot = toIST(o.created_at)
+      const nowMs = Date.now() + OFFSET
+      const dayDiff = Math.floor((nowMs - ot.getTime()) / 86400000)
       if (dayDiff >= 0 && dayDiff < 7) {
         const cell = hourlyHeatmap.find((c) => c.day === dayNames[ot.getDay()] && c.hour === ot.getHours())
         if (cell) cell.orders++
@@ -178,7 +182,7 @@ export async function GET(req: NextRequest) {
     const peakDayMap: Record<string, { orders: number; revenue: number }> = {}
     dayNames.forEach((d) => { peakDayMap[d] = { orders: 0, revenue: 0 } })
     paidOrders.forEach((o: any) => {
-      const day = dayNames[new Date(o.created_at).getDay()]
+      const day = dayNames[toIST(o.created_at).getDay()]
       peakDayMap[day].orders++
       peakDayMap[day].revenue += Number(o.total_amount)
     })
