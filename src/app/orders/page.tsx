@@ -195,7 +195,7 @@ export default function OrdersPage() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${uid}`)
+        const res = await fetch(`/api/orders/list?userId=${uid}&limit=1`)
         if (!cancelled) {
           if (res.ok) {
             const data = (await res.json()) as Order[]
@@ -216,7 +216,7 @@ export default function OrdersPage() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const res = await fetch(`/api/orders/list?userId=${uid}`)
+        const res = await fetch(`/api/orders/list?userId=${uid}&limit=1`)
         if (res.ok && !cancelled) {
           const data = (await res.json()) as Order[]
           setOrders(data.filter((o) => o.user_id === uid))
