@@ -251,8 +251,7 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 flex items-center gap-2">
-          <Package className="text-amber-600" />
+        <h1 className="text-3xl font-bold mb-8">
           My Orders
         </h1>
 
